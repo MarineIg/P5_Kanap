@@ -51,10 +51,13 @@ function createBtnRemove(){ /// createButonRemove
       let basket = getBasket(); 
       const parent = e.target.closest(".cart__item");
       const id = parent.dataset.id;
-      const color = parent.dataset.color;                   
+      const color = parent.dataset.color;   
+      let item = basket.find(p => p.idProduct == id && p.color == color); 
+     
       basket = basket.filter(p => p.idProduct !== id || p.color !== color); 
-
-      parent.remove();
+      tableau = tableau.filter(p => p.id !== item.idProduct + item.color);
+      
+      parent.remove();      
       saveBasket(basket);
       displayTotalQuantity();
       displayTotalPrice();     
@@ -71,20 +74,25 @@ function createChangeQuantity(){
       let basket = getBasket();                 
       let parent = e.target.closest(".cart__item");
       let id = parent.dataset.id;
-      let color = parent.dataset.color;
+      let color = parent.dataset.color;     
 
-      if (parseInt(e.target.value) === 0) {
-        basket = basket.filter(p => p.idProduct !== id || p.color !== color);         
-        parent.remove();          
-                   
-        
-      }else{ 
-        let item = basket.find(p => p.idProduct == id && p.color == color);       
-        item.quantity = parseInt(e.target.value);  
-        let indexArticle = tableau.findIndex(p => p.id == item.idProduct + item.color); // recupère l'index de l'item
-        tableau[indexArticle].quantity = item.quantity;   
+      let item = basket.find(p => p.idProduct == id && p.color == color);  
 
-      };
+      item.quantity = parseInt(e.target.value); 
+
+      let indexArticle = tableau.findIndex(p => p.id == item.idProduct + item.color); 
+      // recupère l'index de l'item
+      tableau[indexArticle].quantity = item.quantity;  
+      // console.log(tableau[indexArticle].quantity);
+
+      // Va supprimer le produit si 0
+      if(tableau[indexArticle].quantity <= 0){ 
+        console.log('test');        
+        basket = basket.filter(p => p.idProduct !== id || p.color !== color);
+        tableau = tableau.filter(p => p.id !== item.idProduct + item.color) 
+        parent.remove();  
+        console.log(tableau);  
+      }
 
     saveBasket(basket);                               
     displayTotalQuantity();
@@ -94,16 +102,19 @@ function createChangeQuantity(){
   };
 };
 
-function displayTotalPrice(){  
-
-  let totalPrice = 0; 
+function displayTotalPrice(){ 
+  
+  // let basket = getBasket();
+  let totalPrice = 0;   
 
   for (let article of tableau){
-    totalPrice += article.price * article.quantity ;   
+    totalPrice += article.price * article.quantity ;
+    // console.log(article.quantity );   
   };
-
+  
+  
   const displayPrice = document.querySelector('#totalPrice');
-  displayPrice.textContent = totalPrice;   
+  displayPrice.textContent = totalPrice;  
   
 };
 
