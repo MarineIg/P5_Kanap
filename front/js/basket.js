@@ -81,22 +81,21 @@ function createChangeQuantity(){
       item.quantity = parseInt(e.target.value); 
 
       let indexArticle = tableau.findIndex(p => p.id == item.idProduct + item.color); 
+
       // recupère l'index de l'item
-      tableau[indexArticle].quantity = item.quantity;  
-      // console.log(tableau[indexArticle].quantity);
+      tableau[indexArticle].quantity = item.quantity;        
 
       // Va supprimer le produit si 0
       if(tableau[indexArticle].quantity <= 0){ 
         console.log('test');        
         basket = basket.filter(p => p.idProduct !== id || p.color !== color);
-        tableau = tableau.filter(p => p.id !== item.idProduct + item.color) 
-        parent.remove();  
-        console.log(tableau);  
-      }
+        tableau = tableau.filter(p => p.id !== item.idProduct + item.color);
+        parent.remove();          
+      };
 
-    saveBasket(basket);                               
-    displayTotalQuantity();
-    displayTotalPrice();
+      saveBasket(basket);                               
+      displayTotalQuantity();
+      displayTotalPrice();
 
     });
   };
@@ -108,7 +107,7 @@ function displayTotalPrice(){
   let totalPrice = 0;   
 
   for (let article of tableau){
-    totalPrice += article.price * article.quantity ;
+    totalPrice += article.price * article.quantity;
     // console.log(article.quantity );   
   };
   

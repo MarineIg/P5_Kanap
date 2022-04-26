@@ -51,8 +51,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                                                   </article>`; 
       
     for (let colorSelect of product.colors) {
-      document.querySelector("#colors").innerHTML += `<option value="${colorSelect}">${colorSelect}</option>`;
-      
+      document.querySelector("#colors").innerHTML += `<option value="${colorSelect}">${colorSelect}</option>`;     
       
     }
 
@@ -62,10 +61,9 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
           
       addToBasket(product);
-      alert('Produit(s) ajouté(s) au panier')
+      // alert('Produit(s) ajouté(s) au panier')
       
-    });
-    
+    });   
     
   })
 
