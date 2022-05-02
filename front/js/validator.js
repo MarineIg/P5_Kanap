@@ -15,7 +15,7 @@ class Validator {
     }
 
     isAddress(address) {        
-        let regAddress = /^[0-9]+(?:[-'\s][a-zA-Zà-żÀ-Ż]+)*$/;
+        let regAddress = /[a-zA-Zà-żÀ-Ż]+?(?:[0-9]+[-'\s][a-zA-Zà-żÀ-Ż]+)*$/;
         let result = regAddress.test(address);
         if (result === false) {
             

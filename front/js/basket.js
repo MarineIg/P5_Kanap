@@ -8,8 +8,9 @@ function addToBasket(product) {
     quantity : parseInt(selectQuantity), 
   };  
   if (selectColor == null || selectColor === "" || selectQuantity == null || selectQuantity <= 0) {
-    alert("Merci de sélectionner une couleur et une quantité");
+    return false;
   }else {    
+    alert('Produit(s) ajouté(s) au panier')
     quantity(productSelect);   
   };
 };
@@ -76,18 +77,19 @@ function createChangeQuantity(){
       let id = parent.dataset.id;
       let color = parent.dataset.color;     
 
-      let item = basket.find(p => p.idProduct == id && p.color == color);  
+      let item = basket.find(p => p.idProduct == id && p.color == color);      
 
       item.quantity = parseInt(e.target.value); 
 
-      let indexArticle = tableau.findIndex(p => p.id == item.idProduct + item.color); 
+      let indexArticle = tableau.findIndex(p => p.id == item.idProduct + item.color);       
 
       // recupère l'index de l'item
-      tableau[indexArticle].quantity = item.quantity;        
+      tableau[indexArticle].quantity = item.quantity;   
+      console.log(tableau[indexArticle].quantity);     
 
-      // Va supprimer le produit si 0
-      if(tableau[indexArticle].quantity <= 0){ 
-        console.log('test');        
+      // Va supprimer le produit si 0 ou différent d'une quantité
+      if(tableau[indexArticle].quantity <= 0 || !tableau[indexArticle].quantity){        
+              
         basket = basket.filter(p => p.idProduct !== id || p.color !== color);
         tableau = tableau.filter(p => p.id !== item.idProduct + item.color);
         parent.remove();          

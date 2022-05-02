@@ -61,7 +61,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
           
       addToBasket(product);
-      // alert('Produit(s) ajouté(s) au panier')
+      
       
     });   
     

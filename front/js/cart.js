@@ -1,9 +1,8 @@
-let panier = JSON.parse(localStorage.getItem("basket"));
-// let totalPrice = 0;
+let panier = getBasket();
+// let panier = JSON.parse(localStorage.getItem("basket"));
 let tableau = [];
-// let key = "";
-
-
+displayTotalPrice();
+displayTotalQuantity();
 
 for (let listProduct of panier) {
     const produit = listProduct;
@@ -68,8 +67,8 @@ for (let listProduct of panier) {
         
 }; 
 
-displayTotalPrice();
-displayTotalQuantity(); 
+// displayTotalPrice();
+// displayTotalQuantity(); 
 
 //////////////////////////////////// Formulaire ////////////////////////////////////////
 
@@ -198,7 +197,11 @@ btnSubmit.addEventListener('click', function(e){
   e.preventDefault();
   btnSubmitVerif();
 
+
+
 })
+
+let products = []
 
 function btnSubmitVerif(){
 
@@ -232,7 +235,51 @@ function btnSubmitVerif(){
   }
 
   if(formIsValid){
-    alert('Formulaire envoyé')    
-  } 
-}
+    contact =  {
+      firstName: inputFirstName.value,
+      lastName: inputLastName.value,
+      address: inputAddress.value,
+      city: inputCity.value,
+      email: inputEmail.value
+    };
+    for (let test of panier){  
+      id = test.idProduct
+      products.push(id)
+    };
+    send();  
+  };
+};
+
+
+
+function send(){
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({contact, products}),
+  })
+    .then( function(res){
+      if (res.ok) {
+        return res.json();        
+      }
+    })
+    .then(function(value){
+      let result = value.orderId
+      console.log(result);
+      document.location.href = 'confirmation.html?idOrder=' + result;
+      localStorage.clear();
+      
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }  
+  
+  
+
+
+
 
