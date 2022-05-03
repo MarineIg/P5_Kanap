@@ -1,22 +1,23 @@
 let panier = getBasket();
-// let panier = JSON.parse(localStorage.getItem("basket"));
-let tableau = [];
+let storePrices = [];
 displayTotalPrice();
 displayTotalQuantity();
 
 for (let listProduct of panier) {
     const produit = listProduct;
-
+    
+    //Requête l'API qui renvoie les produits du panier
     fetch(`http://localhost:3000/api/products/${produit.idProduct}`)
 
-        .then(function (data) {
+        .then((data) => {
           if (data.ok) {
             return data.json();
           }
         })
-        .then(function (jsonListProduct) {
+
+        .then((jsonListProduct) => {
             const product = jsonListProduct;      
-          
+            // Affichage des produits du panier
             document.getElementById("cart__items").innerHTML += ` <article class="cart__item" data-id="${produit.idProduct}" data-color="${produit.color}">
                                                                     <div class="cart__item__img">
                                                                       <img src="${product.imageUrl}" alt="${product.altTxt}"></img>
@@ -38,48 +39,38 @@ for (let listProduct of panier) {
                                                                       </div>
                                                                     </div>
                                                                   </article>`;
-            
-            const id = produit.idProduct + produit.color;
-            const article = new Article(id, product.price, produit.quantity)
-            // tableau[key] = {price : product.price, quantity : produit.quantity};            
-            tableau.push(article);           
 
-            // console.log(tableau[key].price);
-            // console.log(tableau);      
+            // Création d'un nouvel ID afin de stocker le prix et la quantité
+            const id = produit.idProduct + produit.color;
+            const article = new Article(id, product.price, produit.quantity);                     
+            storePrices.push(article);           
             
-            
-            //// Affichage prix total //// 
-            displayTotalPrice();
-            
-            //// Suppression d'un produit du panier ////
-            createBtnRemove();            
-            
-            //// Modifie la quantité d'un produit ////
+            displayTotalPrice();          
+            createBtnRemove();          
             createChangeQuantity();
         }) 
-        .catch(function (err) {
+
+        .catch((err) => {
           console.log("erreur", err);
         });
-
-        //// Affichage nombre produit total ////
-        displayTotalQuantity();    
         
+        displayTotalQuantity();  
         
 }; 
 
-// displayTotalPrice();
-// displayTotalQuantity(); 
 
 //////////////////////////////////// Formulaire ////////////////////////////////////////
 
 let validator = new Validator();
 
+// Récupère les inputs du formulaire
 let inputFirstName = document.querySelector(".cart__order__form__question:nth-child(1) input");
 let inputLastName = document.querySelector(".cart__order__form__question:nth-child(2) input");
 let inputAddress = document.querySelector(".cart__order__form__question:nth-child(3) input");
 let inputCity = document.querySelector(".cart__order__form__question:nth-child(4) input");
 let inputEmail = document.querySelector(".cart__order__form__question:nth-child(5) input");
 
+// Récupère les id des messages d'erreur
 let firstNameError = document.querySelector("#firstNameErrorMsg");
 let lastNameError = document.querySelector("#lastNameErrorMsg");
 let addressError = document.querySelector("#addressErrorMsg");
@@ -88,7 +79,7 @@ let emailError = document.querySelector("#emailErrorMsg");
 
 let btnSubmit =  document.querySelector("#order");
 
-
+let products = [];
 
 inputFirstName.addEventListener('focusout', () => { 
   let firstName = inputFirstName.value;  
@@ -115,168 +106,10 @@ inputEmail.addEventListener('focusout', () => {
   verifEmail(email); 
 });
 
-
-function verifFirstName (firstName){
-  
-  if (!validator.isName(firstName)) {
-    
-    firstNameError.style.display = "inline";
-    firstNameError.textContent = "Format incorrect";
-    return false; 
-    
-  }else{
-    
-    firstNameError.style.display = "none";
-    return true;
-  };
-};
-
-
-function verifLastName (lastName){
-  
-  if (!validator.isName(lastName)) {
-    
-    lastNameError.style.display = "inline";
-    lastNameError.textContent = "Format incorrect"; 
-    return false;    
-
-  }else{
-    
-    lastNameError.style.display = "none";
-    return true;
-  }
-}
-
-function verifAddress (address){
-  
-  if (!validator.isAddress(address)) {
-    
-    addressError.style.display = "inline";
-    addressError.textContent = "Format incorrect"; 
-    return false;
-  
-  }else{
-    
-    addressError.style.display = "none";
-    return true;
-  }
-}
-
-function verifCity (city){
-  
-  if (!validator.isName(city)) {
-   
-    cityError.style.display = "inline";
-    cityError.textContent = "Format incorrect"; 
-    return false;
-    
-  }else{
-    
-    cityError.style.display = "none";
-    return true;
-  }
-}
-
-function verifEmail (email){
-  
-  if (!validator.isEmail(email)) {
-    
-    emailError.style.display = "inline";
-    emailError.textContent = "Format incorrect";
-    return false; 
-    
-  }else{
-    
-    emailError.style.display = "none";
-    return true;
-  }
-}
-
-btnSubmit.addEventListener('click', function(e){
-  
+btnSubmit.addEventListener('click', (e) => {
   e.preventDefault();
   btnSubmitVerif();
-
-
-
-})
-
-let products = []
-
-function btnSubmitVerif(){
-
-  let formIsValid = true;
-  
-  let firstName = inputFirstName.value; 
-  let lastName = inputLastName.value; 
-  let address = inputAddress.value;  
-  let city = inputCity.value;
-  let email = inputEmail.value;  
-
-  if (!verifFirstName(firstName)) {
-    formIsValid = false;  
-    firstNameError.textContent = "Champ obligatoire";  
-  }
-  if (!verifLastName(lastName)) {
-    formIsValid = false; 
-    lastNameError.textContent = "Champ obligatoire";   
-  }
-  if (!verifAddress(address)) {
-    formIsValid = false; 
-    addressError.textContent = "Champ obligatoire";    
-  }
-  if (!verifCity(city)) {
-    formIsValid = false; 
-    cityError.textContent = "Champ obligatoire";    
-  }
-  if (!verifEmail(email)) {
-    formIsValid = false; 
-    emailError.textContent = "Champ obligatoire";    
-  }
-
-  if(formIsValid){
-    contact =  {
-      firstName: inputFirstName.value,
-      lastName: inputLastName.value,
-      address: inputAddress.value,
-      city: inputCity.value,
-      email: inputEmail.value
-    };
-    for (let test of panier){  
-      id = test.idProduct
-      products.push(id)
-    };
-    send();  
-  };
-};
-
-
-
-function send(){
-  fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-      
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({contact, products}),
-  })
-    .then( function(res){
-      if (res.ok) {
-        return res.json();        
-      }
-    })
-    .then(function(value){
-      let result = value.orderId
-      console.log(result);
-      document.location.href = 'confirmation.html?idOrder=' + result;
-      localStorage.clear();
-      
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }  
+});
   
   
 

@@ -1,13 +1,15 @@
-// Requete API
+// Requete de l'API qui renvoie les différents produits
 fetch("http://localhost:3000/api/products")
-  .then(function (data) {
+  .then((data) => {
     if (data.ok) {
       return data.json();
     }
   })
-  .then(function (jsonListProduct) {
-    for (let jsonProduct of jsonListProduct) { //boucle qui va parcourir la tableau json et va créer dans variable jsonProduct
+
+  .then((jsonListProduct) => {
+    for (let jsonProduct of jsonListProduct) {
       const product = jsonProduct;
+      // Affichage de l'ensemble des produits sur la page
       document.getElementById("items").innerHTML += ` <a href="./product.html?_id=${product._id}">
                                                         <article>
                                                           <img src="${product.imageUrl}" alt="${product.altTxt}">
@@ -17,6 +19,7 @@ fetch("http://localhost:3000/api/products")
                                                       </a>`;
     };
   })
-  .catch(function (err) {
-    console.log("erreur :", err);
+
+  .catch((err) => {
+    console.log("erreur :", err);    
   });

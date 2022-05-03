@@ -1,16 +1,18 @@
 // Récupération de l'id produit dans l'url
 let productId = new URL(location.href).searchParams.get("_id");
 
+//Requête de l'API pour le produit selectionné
 fetch(`http://localhost:3000/api/products/${productId}`)
-  .then(function (data) {
+
+  .then((data) => {
     if (data.ok) {
       return data.json();
     }
   })
-  .then(function (jsonListProduct) {
-    const product = jsonListProduct;
 
-    // AFFICAGE DES ELEMENTS DU PRODUIT
+  .then((jsonListProduct) => {
+    const product = jsonListProduct;
+    // Affichage du produit selectionné
     document.querySelector(".item").innerHTML = ` <article>
                                                     <div class="item__img">
                                                       <img src="${product.imageUrl}" alt="${product.altTxt}">
@@ -48,26 +50,21 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                                                       </div>
 
                                                     </div>        
-                                                  </article>`; 
-      
+                                                  </article>`;     
+
     for (let colorSelect of product.colors) {
-      document.querySelector("#colors").innerHTML += `<option value="${colorSelect}">${colorSelect}</option>`;     
-      
-    }
+      document.querySelector("#colors").innerHTML += `<option value="${colorSelect}">${colorSelect}</option>`;    
+    };
 
-    const btnAdd = document.getElementById("addToCart");    
-    
-    btnAdd.addEventListener("click", function () {
+    // Création du bouton "ajouter au panier"
+    const btnAdd = document.getElementById("addToCart");   
 
-          
-      addToBasket(product);
-      
-      
-    });   
-    
+    btnAdd.addEventListener("click", () => {
+      addToBasket(product);     
+    });
   })
 
-  .catch(function (err) {
+  .catch((err) => {
     console.log("erreur", err);
   });
 
