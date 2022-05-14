@@ -8,7 +8,7 @@ const addToBasket = (product) => {
     color : selectColor,
     quantity : parseInt(selectQuantity), 
   };  
-  if (selectColor == null || selectColor === "" || selectQuantity == null || selectQuantity <= 0) {
+  if (selectColor == "" || selectQuantity == null || selectQuantity <= 0) {    
     return false;
   }else {    
     alert('Produit(s) ajouté(s) au panier')
@@ -136,7 +136,7 @@ const displayTotalQuantity = () => {
   let totalQuantity = 0;
 
   for (let produit of basket){
-  totalQuantity += produit.quantity; 
+    totalQuantity += produit.quantity; 
   };
 
   const displayQuantity = document.querySelector('#totalQuantity');

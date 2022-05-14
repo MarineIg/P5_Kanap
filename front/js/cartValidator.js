@@ -80,6 +80,7 @@ const verifEmail = (email) => {
 
 // Permet de vérifier si tous les champs sont remplis et envoie le formulaire
 const btnSubmitVerif = () => {
+  let basket = getBasket();  
 
   let formIsValid = true;
   
@@ -118,11 +119,16 @@ const btnSubmitVerif = () => {
       city: inputCity.value,
       email: inputEmail.value
     };
-    for (let product of panier){      
-      id = product.idProduct;
-      products.push(id);
-    };
-    send();  
+    if (basket.length === 0) { 
+      return false;
+      
+    }else { 
+        for (let product of basket){      
+        id = product.idProduct;
+        products.push(id);
+      };         
+      send();  
+    }    
   };
 
 };

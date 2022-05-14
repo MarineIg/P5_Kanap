@@ -46,15 +46,16 @@ for (let listProduct of panier) {
             storePrices.push(article);           
             
             displayTotalPrice();          
+            displayTotalQuantity();  
             createBtnRemove();          
             createChangeQuantity();
+
         }) 
 
         .catch((err) => {
           console.log("erreur", err);
         });
         
-        displayTotalQuantity();  
         
 }; 
 
